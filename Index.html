@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KZ4N — Public Profile Lookup</title>
+<style>
+:root{--bg:#06080c;--panel:#0d1219;--line:#222b38;--text:#edf1f6;--muted:#8995a7;--red:#ff2038;--green:#39d98a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -10%,#28080e,#06080c 45%);color:var(--text);font:14px ui-monospace,SFMono-Regular,Consolas,monospace}
+header{padding:25px;border-bottom:1px solid var(--line);background:#080a0f}.logo{color:var(--red);font-weight:900;font-size:clamp(16px,3vw,34px);line-height:.9;margin:0;overflow:auto;text-shadow:0 0 18px #500711}.sub{color:var(--muted);margin-top:13px}
+main{max-width:1100px;margin:auto;padding:25px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.tabs button{padding:10px 13px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px;font:inherit;cursor:pointer}.tabs button.active,.tabs button:hover{border-color:var(--red)}
+.page{display:none}.page.active{display:block}.card{background:linear-gradient(180deg,#101620,#0b1017);border:1px solid var(--line);border-radius:9px;padding:18px;margin-bottom:15px}
+h2,h3{margin-top:0}.lookup{display:grid;grid-template-columns:1fr auto;gap:9px}.lookup input{padding:12px;background:#080d13;color:var(--text);border:1px solid var(--line);border-radius:6px;font:inherit}.lookup button,.action{padding:12px 16px;background:#20090d;color:#fff;border:1px solid var(--red);border-radius:6px;font:inherit;cursor:pointer}
+.platforms{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.platform{padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:8px}.platform b{color:var(--red)}.platform small{display:block;color:var(--muted);margin-top:7px}
+.result{display:none}.result.show{display:block}.row{display:flex;justify-content:space-between;gap:20px;padding:9px 0;border-bottom:1px solid #18202b}.row span:first-child{color:var(--muted)}.avatar{width:100px;height:100px;border-radius:8px;object-fit:cover;border:1px solid var(--line);background:#111}
+.terminal{background:#030507;border:1px solid var(--line);border-radius:8px;padding:15px;min-height:170px;white-space:pre-wrap;color:#b9c5d4}.green{color:var(--green)}.red{color:var(--red)}.muted{color:var(--muted)}
+.history div{padding:8px;border-bottom:1px solid var(--line)}
+@media(max-width:700px){.platforms{grid-template-columns:1fr}.lookup{grid-template-columns:1fr}}
+</style>
+<style>
+.toolnav{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.toolnav button{padding:9px 11px;background:#0d1219;color:#edf1f6;border:1px solid #222b38;border-radius:5px;font:inherit;cursor:pointer}
+.toolnav button:hover,.toolnav button.active{border-color:#ff2038}
+.tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.toolcard{background:#0d1219;border:1px solid #222b38;border-radius:8px;padding:14px}
+.toolcard h3{margin:0 0 5px;color:#fff;font-size:13px}.toolcard p{color:#8995a7;min-height:42px;font-size:12px}
+.toolcard input,.toolcard select{width:100%;padding:8px;margin:4px 0 8px;background:#080d13;color:#edf1f6;border:1px solid #222b38;border-radius:4px;font:inherit}
+.toolcard button{width:100%;padding:8px;background:#20090d;color:#fff;border:1px solid #8f0d19;border-radius:4px;font:inherit;cursor:pointer}
+.section{display:none}.section.active{display:block}
+.helpgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.helpitem{background:#0d1219;border:1px solid #222b38;border-radius:6px;padding:9px}.helpitem b{color:#ff2038}.helpitem span{color:#8995a7}
+@media(max-width:850px){.tools{grid-template-columns:1fr 1fr}}@media(max-width:600px){.tools,.helpgrid{grid-template-columns:1fr}}
+</style>
+
+</head>
+<body>
+<header>
+<pre class="logo">
+ _  __  _______  _   _
+| |/ / |___  / | | | | |
+| ' /     / /  | | | | |
+| . \    / /   | | | | |
+|_|\_\  /_/    |_| |_|_|
+</pre>
+<div class="sub">KZ4N // PUBLIC PROFILE LOOKUP // READ-ONLY</div>
+</header>
+<main>Tools:
+  --help            / -h  : Shows all tools options.
+  --version         / -v  : Displays the version and information of the tool.
+  --settings-update / -su : Update the tools settings.
+  * --mode          / -m  : Mode: decorated / interface
+  * --status        / -s  : Status: enable / disable
+
+Pentesting:
+  --advanced-scanner      / -as  : Advanced scanning performing all scans. (website, domain, IP, server)
+  * --target              / -t   : Service target: <URL> / <domain> / <IP[:port]> / <localhost[:port]>
+    --output              / -o   : Creating additional JSON output.
+    --http-timeout        / -HT  : Set the maximum HTTP timeout in seconds: <timeout>
+    --socket-timeout      / -ST  : Set the maximum socket timeout in seconds: <timeout>
+    --http-proxy          / -HP  : Set an HTTP proxy: <proxy:port>
+    --socket-proxy        / -SP  : Set a socket proxy: <proxy:port>
+    --useragent           / -u   : Set a user-agent: random / <useragent>
+    --cookie              / -c   : Set a cookie: <cookie>
+  --vulnerability-scanner / -vs  : Scan all vulnerabilities of a website.
+  * --target              / -t   : Website target: <URL> / <domain> / <IP:port> / <localhost:port>
+    --output              / -o   : Creating additional JSON output.
+    --http-timeout        / -HT  : Set the maximum HTTP timeout in seconds: <timeout>
+    --http-proxy          / -HP  : Set an HTTP proxy: <proxy:port>
+    --useragent           / -u   : Set a user-agent: random / <useragent>
+    --cookie              / -c   : Set a cookie: <cookie>
+  --port-scanner          / -ps  : Scan the ports of an IP.
+  * --target              / -t   : IP target: <IP>
+  * --mode                / -m   : Scan mode: single / multiple / range / default / all
+    --port                / -p   : Port(s): single: <port> / multiple: <port>,<port> / range: <port>-<port>
+    --protocol-scan       / -PS  : Protocol(s): TCP / UDP / TCP,UDP
+    --output              / -o   : Creating additional JSON output.
+    --socket-timeout      / -ST  : Set the maximum socket timeout in seconds: <timeout>
+    --socket-proxy        / -SP  : Set a socket proxy: <proxy:port>
+  --url-discovery-crawler / -udc : Scan all urls of a website.
+  * --target              / -t   : Website target: <URL> / <domain> / <IP:port> / <localhost:port>
+  * --mode                / -m   : Scan mode: onlypage / allwebsite
+    --output              / -o   : Creating additional JSON output.
+    --http-timeout        / -HT  : Set the maximum HTTP timeout in seconds: <timeout>
+    --http-proxy          / -HP  : Set an HTTP proxy: <proxy:port>
+    --useragent           / -u   : Set a user-agent: random / <useragent>
+    --cookie              / -c   : Set a cookie: <cookie>
+  --ip-pinger             / -ip  : Continuously ping an IP.
+  * --target              / -t   : IP target: <IP>
+  * --mode                / -m   : Ping mode: ICMP / TCP
+    --bytes               / -b   : Set the number of bytes for an ICMP ping: <bytes>
+    --port                / -p   : Set the port for a TCP ping: <port>
+    --interval            / -i   : Set the interval between each ping in seconds: <interval>
+    --socket-timeout      / -ST  : Set the maximum socket timeout in seconds: <timeout>
+    --socket-proxy        / -SP  : Set a socket proxy: <proxy:port>
+  --host-discovery        / -hd  : Determines which hosts are online.
+  * --target              / -t   : CIDR target: <IP>/<CIDR prefix>
+    --port                / -p   : Set the port for a TCP ping: <port>
+    --output              / -o   : Creating additional JSON output.
+    --tcp-icmp-timeout    / -TIT : Set the maximum TCP/ICMP timeout in seconds: <timeout>
+    --socket-proxy        / -SP  : Set a socket proxy: <proxy:port>
+
+Osint:
+  --dorking-query-engine     / -dqe : Query builder for Google, Bing and DuckDuckGo with advanced operators.
+  * --engine                 / -e   : Search engine: google / bing / duckduckgo
+  --wallet-tracker           / -wt  : Track a crypto wallet's transactions with APIs.
+  * --address                / -a   : Wallet target address: <address>
+    --output                 / -o   : Creating additional JSON output.
+    --http-timeout           / -HT  : Set the maximum HTTP timeout for the API in seconds: <timeout>
+    --http-proxy             / -HP  : Set an HTTP proxy for the API: <proxy:port>
+    --useragent              / -u   : Set a user-agent for the API: random / <useragent>
+  --username-tracker         / -ut  : Track a username across multiple platforms.
+  * --target                 / -t   : The target username: <username>
+    --output                 / -o   : Creating additional JSON output.
+    --http-timeout           / -HT  : Set the maximum HTTP timeout in seconds: <timeout>
+    --http-proxy             / -HP  : Set an HTTP proxy: <proxy:port>
+    --useragent              / -u   : Set a user-agent: random / <useragent>
+  --email-tracker            / -et  : track an email registered on several platforms.
+  * --email                  / -e   : Email target: <email>
+    --output                 / -o   : Creating additional JSON output.
+    --http-timeout           / -HT  : Set the maximum HTTP timeout in seconds: <timeout>
+    --http-proxy             / -HP  : Set an HTTP proxy: <proxy:port>
+    --useragent              / -u   : Set a user-agent: random / <useragent>
+  --email-lookup             / -el  : Retrieve public data from an email.
+  * --email                  / -e   : Email target: <email>
+    --output                 / -o   : Creating additional JSON output.
+    --socket-timeout         / -ST  : Set the maximum socket timeout in seconds: <timeout>
+    --socket-proxy           / -SP  : Set a socket proxy: <proxy:port>
+  --ip-lookup                / -il  : Fetch public IP data using the "ip-api.com" API.
+  * --ip                     / -i   : IP target: <IP>
+    --output                 / -o   : Creating additional JSON output.
+    --http-timeout           / -HT  : Set the maximum HTTP timeout for the API in seconds: <timeout>
+    --http-proxy             / -HP  : Set an HTTP proxy for the API: <proxy:port>
+    --useragent              / -u   : Set a user-agent for the API: random / <useragent>
+  --phone-number-lookup      / -pnl : Retrieve public data from a phone number.
+  * --phone                  / -p   : Phone number target: <number>
+    --output                 / -o   : Creating additional JSON output.
+  --instagram-profile-lookup / -ipl : Retrieve public data from an instagram username.
+  * --target                 / -t   : Username target: <username>
+  * --sessionid              / -s   : Your instagram id session: <sessionid>
+    --output                 / -o   : Creating additional JSON output.
+    --http-proxy             / -HP  : Set an HTTP proxy: <proxy:port>
+    --useragent              / -u   : Set a user-agent: random / <useragent>
+
+Utilities:
+  --file-metadata-scanner / -fms : Scan all file metadata.
+  * --path                / -p   : The file path: <path>
+    --output              / -o   : Creating additional JSON output.
+  --file-metadata-deleter / -fmd : Remove all file metadata.
+  * --path                / -p   : The file path: <path>
+  --website-cloner        / -wc  : Clone the entire web page.
+  * --target              / -t   : Website target: <URL> / <domain> / <IP:port> / <localhost:port>
+    --http-timeout        / -HT  : Set the maximum HTTP timeout in seconds: <timeout>
+    --http-proxy          / -HP  : Set an HTTP proxy: <proxy:port>
+    --useragent           / -u   : Set a user-agent: random / <useragent>
+    --cookie              / -c   : Set a cookie: <cookie>
+
+Notations:
+  /  : Or
+  [] : Optional
+  <> : Value
+  *  : Required
